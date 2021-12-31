@@ -41,7 +41,6 @@ const main = () => {
                     for (var file of files) {
                         if (file.includes(file_type)) {
                             inverter(file)
-
                         }
                     }
                 }
