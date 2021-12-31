@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { exit } from 'process';
 import readline from 'readline'
 
 async function getIndents (file, cb) {
@@ -69,13 +70,15 @@ async function writeToFile(des, file, indent, indents) {
 
     fs.unlink(file, (err) => {
         if (err) {
-            console.log(err)
+            console.log(chalk.red(`An error occured: ${file + "_"} now contains your data`))
+            exit()
         }
     })
-    console.log(file)
+    
     fs.rename(file + "_", file, (err) => {
         if (err) {
-            console.log(err)
+            console.log(chalk.red(`An error occured: Please rename ${file + "_"} to ${file}`))
+            exit()
         }
     })
 }
@@ -91,7 +94,8 @@ async function fixIndents(file, indent, indents, maxIndents) {
             writeToFile(des, file, indent, indents)
             
         } else {
-            console.log(err, des)
+            console.log(err)
+            exit()
         }
     })
 }

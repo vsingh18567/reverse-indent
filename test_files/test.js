@@ -6,7 +6,8 @@ import invert from './invert.js';
 
 function main () {
     const argv = yargs(process.argv.slice(2)).option('types', {
-        type: 'array'
+        type: 'array',
+        description: "types of files that you want to reverse"
     }).argv;
     const filepath = argv._[0]
     if (filepath == undefined) {
