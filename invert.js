@@ -1,8 +1,6 @@
 import fs from 'fs'
 import readline from 'readline'
 
-
-
 async function getIndents (file, cb) {
     const fileStream = fs.createReadStream(file)
     const rd = readline.createInterface({
@@ -70,11 +68,15 @@ async function writeToFile(des, file, indent, indents) {
     }
 
     fs.unlink(file, (err) => {
-        console.log(err)
+        if (err) {
+            console.log(err)
+        }
     })
-
+    console.log(file)
     fs.rename(file + "_", file, (err) => {
-        console.log(err)
+        if (err) {
+            console.log(err)
+        }
     })
 }
 
@@ -85,20 +87,15 @@ async function fixIndents(file, indent, indents, maxIndents) {
 
     const newFile = file + "_"
     fs.open(newFile, 'wx', (err, des) => {
-        if (!err & des) {
+        if (!err && des) {
             writeToFile(des, file, indent, indents)
             
         } else {
-            console.log(err)
+            console.log(err, des)
         }
     })
-
-
-
-
-
 }
 
-export default (file) => {
+export default async (file) => {
     getIndents(file, fixIndents);
 }

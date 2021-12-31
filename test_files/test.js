@@ -4,18 +4,16 @@ import yargs from 'yargs'
 import fs from 'fs'
 import invert from './invert.js';
 
-// reverse-indent path [types]
-
-
-const main = () => {
+function main () {
     const argv = yargs(process.argv.slice(2)).option('types', {
         type: 'array'
     }).argv;
-
     const filepath = argv._[0]
     if (filepath == undefined) {
         console.error("Please specify filepath")
     }
+    console.log(argv.types)
+    console.log(filepath)
     fs.readdir(filepath, (err, files) => {
         if (err) {
             if (err.code === "ENOTDIR") {
@@ -28,37 +26,26 @@ const main = () => {
                 } else {
                     invert(filepath)
                 }
+                
             } else {
                 console.log(err)
             }
         } else {
             if (argv.types) {
                 for (var file_type of argv.types) {
-                    for (var file of files) {
+                    for await (var file of files) {
                         if (file.includes(file_type)) {
-                            let newPath = filepath
-                            if (filepath.charAt(filepath.length - 1) !== '/') {
-                                newPath = newPath + "/"
-                            } 
-                            invert(newPath + file)
+                            invert(file)
                         }
                     }
                 }
             } else {
-                for (var file of files) {
-                    let newPath = filepath
-                    if (filepath.charAt(filepath.length - 1) !== '/') {
-                        newPath = newPath + "/"
-                    } 
-                    invert(newPath + file)
+                for await (var file of files) {
+                    invert(file)
                 }
             }
-
         }
     })
-    
 }
 
-
-// files
 main()
